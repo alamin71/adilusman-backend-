@@ -15,7 +15,18 @@ const fileFilter = (req: any, file: Express.Multer.File, cb: any) => {
     'application/octet-stream',
   ];
 
-  const allowedAudioMimes = ['audio/mpeg', 'audio/mp3', 'audio/wav'];
+  const allowedAudioMimes = [
+    'audio/mpeg',
+    'audio/mp3',
+    'audio/wav',
+    'audio/ogg',
+    'audio/webm',
+    'audio/aac',
+    'audio/x-m4a',
+    'audio/flac',
+    'audio/x-flac',
+    'audio/mp4',
+  ];
   const allowedVideoMimes = ['video/mp4', 'video/mpeg', 'video/webm'];
   const allowedDocMimes = [
     'application/pdf',
@@ -46,7 +57,11 @@ const fileFilter = (req: any, file: Express.Multer.File, cb: any) => {
     if (allowedAudioMimes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Only .mp3, .mpeg, .wav format allowed!'));
+      cb(
+        new Error(
+          'Only supported audio formats are allowed (mp3, mpeg, wav, ogg, webm, aac, m4a, flac, mp4)'
+        )
+      );
     }
   } else if (videoFields.includes(file.fieldname)) {
     if (allowedVideoMimes.includes(file.mimetype)) {
@@ -71,7 +86,7 @@ const s3FileUploadHandler = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB max file size
+    fileSize: 50 * 1024 * 1024, // 50MB max file size
   },
 });
 
