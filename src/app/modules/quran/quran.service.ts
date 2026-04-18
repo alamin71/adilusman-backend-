@@ -151,8 +151,16 @@ const getPublicSurasFromDB = async (payload: {
     Sura.countDocuments(query),
   ]);
 
+  const suraData = suras.map((sura) => {
+    const suraObject = sura.toObject();
+    return {
+      ...suraObject,
+      playbackUrl: suraObject.audioUrl,
+    };
+  });
+
   return {
-    data: suras,
+    data: suraData,
     meta: {
       page: currentPage,
       limit: perPage,
@@ -165,7 +173,18 @@ const getPublicSurasFromDB = async (payload: {
 const getSingleSuraFromDB = async (suraId: string) => {
   await ensureSuraExists(suraId);
 
-  return Sura.findById(suraId).populate('reciter', 'name image');
+  const sura = await Sura.findById(suraId).populate('reciter', 'name image');
+
+  if (!sura) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'Sura not found');
+  }
+
+  const suraObject = sura.toObject();
+
+  return {
+    ...suraObject,
+    playbackUrl: suraObject.audioUrl,
+  };
 };
 
 const increaseListenCountInDB = async (suraId: string) => {
@@ -186,6 +205,16 @@ const increaseDownloadCountInDB = async (suraId: string) => {
     { $inc: { totalDownloads: 1 } },
     { new: true }
   ).populate('reciter', 'name image');
+};
+
+const getSuraDownloadInfoFromDB = async (suraId: string) => {
+  await ensureSuraExists(suraId);
+
+  return Sura.findByIdAndUpdate(
+    suraId,
+    { $inc: { totalDownloads: 1 } },
+    { new: true }
+  ).select('title audioUrl fileFormat');
 };
 
 const addFavoriteToDB = async (guestId: string, suraId: string) => {
@@ -272,7 +301,21 @@ const createSuraByAdminToDB = async (payload: {
     durationInSeconds: parsePositiveNumber(durationInSeconds),
   });
 
-  return Sura.findById(createdSura._id).populate('reciter', 'name image');
+  const populatedSura = await Sura.findById(createdSura._id).populate(
+    'reciter',
+    'name image'
+  );
+
+  if (!populatedSura) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'Sura not found after upload');
+  }
+
+  const suraObject = populatedSura.toObject();
+
+  return {
+    ...suraObject,
+    playbackUrl: suraObject.audioUrl,
+  };
 };
 
 const getAdminSurasFromDB = async () => {
@@ -287,6 +330,7 @@ export const QuranService = {
   getSingleSuraFromDB,
   increaseListenCountInDB,
   increaseDownloadCountInDB,
+  getSuraDownloadInfoFromDB,
   addFavoriteToDB,
   removeFavoriteFromDB,
   getFavoriteSurasFromDB,

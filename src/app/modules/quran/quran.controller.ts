@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { Readable } from 'stream';
 import AppError from '../../../errors/AppError';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
@@ -16,6 +17,24 @@ const getGuestId = (req: Request): string => {
 
   return guestId.trim();
 };
+
+const mimeTypeToExtension: Record<string, string> = {
+  'audio/mpeg': 'mp3',
+  'audio/mp3': 'mp3',
+  'audio/wav': 'wav',
+  'audio/x-wav': 'wav',
+  'audio/aac': 'aac',
+  'audio/ogg': 'ogg',
+  'audio/mp4': 'm4a',
+  'audio/x-m4a': 'm4a',
+  'audio/flac': 'flac',
+};
+
+const sanitizeFileName = (name: string) =>
+  name
+    .replace(/[^a-zA-Z0-9-_\. ]/g, '')
+    .trim()
+    .replace(/\s+/g, '-');
 
 const getPublicReciters = catchAsync(async (req: Request, res: Response) => {
   const search =
@@ -93,6 +112,43 @@ const downloadSura = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+const downloadSuraAudioFile = catchAsync(
+  async (req: Request, res: Response) => {
+    const suraId = req.params.suraId;
+    const sura = await QuranService.getSuraDownloadInfoFromDB(suraId);
+
+    if (!sura?.audioUrl) {
+      throw new AppError(StatusCodes.NOT_FOUND, 'Sura audio not found');
+    }
+
+    const upstreamResponse = await fetch(sura.audioUrl);
+
+    if (!upstreamResponse.ok || !upstreamResponse.body) {
+      throw new AppError(StatusCodes.BAD_GATEWAY, 'Unable to download audio');
+    }
+
+    const mimeType =
+      upstreamResponse.headers.get('content-type') ||
+      sura.fileFormat ||
+      'audio/mpeg';
+    const extension = mimeTypeToExtension[mimeType.toLowerCase()] || 'mp3';
+    const filename = `${sanitizeFileName(sura.title || 'sura')}.${extension}`;
+
+    res.setHeader('Content-Type', mimeType);
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+    const contentLength = upstreamResponse.headers.get('content-length');
+    if (contentLength) {
+      res.setHeader('Content-Length', contentLength);
+    }
+
+    const stream = Readable.fromWeb(
+      upstreamResponse.body as unknown as import('stream/web').ReadableStream
+    );
+    stream.pipe(res);
+  }
+);
 
 const addFavorite = catchAsync(async (req: Request, res: Response) => {
   const { guestId, suraId } = req.body;
@@ -199,6 +255,7 @@ export const QuranController = {
   getSingleSura,
   listenSura,
   downloadSura,
+  downloadSuraAudioFile,
   addFavorite,
   removeFavorite,
   getFavorites,

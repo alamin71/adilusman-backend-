@@ -1,7 +1,4 @@
 import express from 'express';
-import { USER_ROLES } from '../../../enums/user';
-import auth from '../../middleware/auth';
-import { s3FileUploadHandler } from '../../middleware/s3FileUploadHandler';
 import validateRequest from '../../middleware/validateRequest';
 import { QuranController } from './quran.controller';
 import { QuranValidation } from './quran.validation';
@@ -23,6 +20,10 @@ router.get(
 router.get('/suras/:suraId', QuranController.getSingleSura);
 router.post('/suras/:suraId/listen', QuranController.listenSura);
 router.post('/suras/:suraId/download', QuranController.downloadSura);
+router.get(
+  '/suras/:suraId/audio-download',
+  QuranController.downloadSuraAudioFile
+);
 
 router.get(
   '/favorites',
@@ -37,22 +38,5 @@ router.post(
 );
 
 router.delete('/favorites/:suraId', QuranController.removeFavorite);
-
-router.post(
-  '/admin/suras',
-  auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
-  s3FileUploadHandler.fields([
-    { name: 'audio', maxCount: 1 },
-    { name: 'image', maxCount: 1 },
-  ]),
-  validateRequest(QuranValidation.createSuraZodSchema),
-  QuranController.createSuraByAdmin
-);
-
-router.get(
-  '/admin/suras',
-  auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
-  QuranController.getAdminSuras
-);
 
 export const QuranRoutes = router;

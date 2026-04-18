@@ -5,6 +5,8 @@ import { AdminValidation } from './admin.validation';
 import auth from '../../middleware/auth';
 import validateRequest from '../../middleware/validateRequest';
 import { s3FileUploadHandler } from '../../middleware/s3FileUploadHandler';
+import { QuranController } from '../quran/quran.controller';
+import { QuranValidation } from '../quran/quran.validation';
 const router = express.Router();
 const adminUpload = s3FileUploadHandler;
 
@@ -74,6 +76,23 @@ router.delete(
   '/:id',
   auth(USER_ROLES.SUPER_ADMIN),
   AdminController.deleteAdmin
+);
+
+router.post(
+  '/suras',
+  auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+  adminUpload.fields([
+    { name: 'audio', maxCount: 1 },
+    { name: 'image', maxCount: 1 },
+  ]),
+  validateRequest(QuranValidation.createSuraZodSchema),
+  QuranController.createSuraByAdmin
+);
+
+router.get(
+  '/suras',
+  auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+  QuranController.getAdminSuras
 );
 
 export const AdminRoutes = router;
