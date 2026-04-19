@@ -15,12 +15,41 @@ const getFavoritesZodSchema = z.object({
   }),
 });
 
-const addFavoriteZodSchema = z.object({
-  body: z.object({
-    guestId: z.string().min(3, 'guestId is required'),
-    suraId: z.string().min(1, 'suraId is required'),
-  }),
-});
+const addFavoriteZodSchema = z
+  .object({
+    body: z
+      .object({
+        guestId: z.string().min(3, 'guestId is required').optional(),
+        suraId: z.string().min(1, 'suraId is required').optional(),
+      })
+      .optional(),
+    query: z
+      .object({
+        guestId: z.string().min(3, 'guestId is required').optional(),
+        suraId: z.string().min(1, 'suraId is required').optional(),
+      })
+      .optional(),
+  })
+  .superRefine((data, ctx) => {
+    const guestId = data.body?.guestId || data.query?.guestId;
+    const suraId = data.body?.suraId || data.query?.suraId;
+
+    if (!guestId) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['guestId'],
+        message: 'guestId is required',
+      });
+    }
+
+    if (!suraId) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['suraId'],
+        message: 'suraId is required',
+      });
+    }
+  });
 
 const createSuraZodSchema = z.object({
   body: z

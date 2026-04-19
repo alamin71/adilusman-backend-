@@ -151,7 +151,15 @@ const downloadSuraAudioFile = catchAsync(
 );
 
 const addFavorite = catchAsync(async (req: Request, res: Response) => {
-  const { guestId, suraId } = req.body;
+  const guestId =
+    (typeof req.body.guestId === 'string' && req.body.guestId) ||
+    (typeof req.query.guestId === 'string' && req.query.guestId) ||
+    '';
+  const suraId =
+    (typeof req.body.suraId === 'string' && req.body.suraId) ||
+    (typeof req.query.suraId === 'string' && req.query.suraId) ||
+    '';
+
   const result = await QuranService.addFavoriteToDB(guestId, suraId);
 
   sendResponse(res, {
