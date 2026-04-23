@@ -17,7 +17,7 @@ export const welcome = () => {
         <div class="welcome-card">
           <p class="badge">ADILUSMAN QURAN BACKEND</p>
           <p class="arabic text-center">السلام عليكم ورحمة الله وبركاته</p>
-          <h1>Alhamdulillah. API is ready for service.</h1>
+          <h2>Alhamdulillah. API is ready for service.</h2>
           <p class="sub">${greeting}</p>
           <p class="time">Server time: <strong>${date}</strong></p>
 
