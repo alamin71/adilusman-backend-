@@ -13,38 +13,161 @@ export const welcome = () => {
   }
 
   return `
-      <div style="text-align:center; font-family: 'Verdana', sans-serif; color:#1f2937; padding: 56px 24px; border-radius: 18px; box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12); max-width: 760px; margin: 24px auto; background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); animation: fadeIn 1.5s;">
-        <div style="display:inline-block; padding: 10px 16px; border-radius: 999px; background:#e0f2fe; color:#075985; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 20px;">
-          Quran Backend
-        </div>
-        <h1 style="font-size: 44px; line-height: 1.15; color: #0f172a; margin: 0 0 16px; animation: scaleUp 1s ease-in-out;">Bismillah. The Quran backend is live.</h1>
-        <p style="font-size: 20px; color: #334155; margin: 0 0 12px; animation: slideIn 1.2s ease-in-out;">${greeting}</p>
-        <p style="font-size: 18px; color: #475569; margin: 0 0 24px;">Current server time: <strong style="color: #0f766e;">${date}</strong></p>
+      <div class="welcome-shell">
+        <div class="welcome-card">
+          <p class="badge">ADILUSMAN QURAN BACKEND</p>
+          <p class="arabic">السلام عليكم ورحمة الله وبركاته</p>
+          <h1>Bismillah. API is ready for service.</h1>
+          <p class="sub">${greeting}</p>
+          <p class="time">Server time: <strong>${date}</strong></p>
 
-        <div style="display:grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin: 28px 0; text-align:left;">
-          <div style="background:#f1f5f9; padding: 16px; border-radius: 14px; border: 1px solid #e2e8f0;">
-            <h3 style="margin: 0 0 8px; color:#0f172a; font-size: 18px;">API Health</h3>
-            <p style="margin:0; color:#475569; font-size: 15px;">Root endpoint is responding and ready.</p>
+          <div class="grid">
+            <article>
+              <h3>Brand</h3>
+              <p>Adilusman Quran platform is online with a clean production setup.</p>
+            </article>
+            <article>
+              <h3>Core APIs</h3>
+              <p>Reciters, suras, listen count, downloads, and favorites are available.</p>
+            </article>
+            <article>
+              <h3>Base Route</h3>
+              <p>Use <strong>/api/v1</strong> to access all Quran backend endpoints.</p>
+            </article>
           </div>
-          <div style="background:#f1f5f9; padding: 16px; border-radius: 14px; border: 1px solid #e2e8f0;">
-            <h3 style="margin: 0 0 8px; color:#0f172a; font-size: 18px;">Quran Features</h3>
-            <p style="margin:0; color:#475569; font-size: 15px;">Reciters, suras, favorites, and audio routes are online.</p>
-          </div>
-          <div style="background:#f1f5f9; padding: 16px; border-radius: 14px; border: 1px solid #e2e8f0;">
-            <h3 style="margin: 0 0 8px; color:#0f172a; font-size: 18px;">Deployment</h3>
-            <p style="margin:0; color:#475569; font-size: 15px;">Built for production with PM2 support.</p>
-          </div>
-        </div>
 
-        <p style="font-size: 16px; color: #64748b; margin: 0;">If you see this page, your Quran backend is up, built, and ready to serve requests.</p>
-  
-        <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #e2e8f0; animation: fadeIn 2s;">
-          <p style="font-size: 16px; color: #0f172a; margin: 0 0 8px; font-weight: 700;">Available routes</p>
-          <p style="font-size: 15px; color: #475569; margin: 0;">Explore the API under <strong>/api/v1</strong> for Quran-related endpoints.</p>
+          <p class="foot">May this service bring benefit and barakah. Ameen.</p>
         </div>
       </div>
-  
+
       <style>
+        :root {
+          --brand-primary: #0f766e;
+          --brand-secondary: #1d4ed8;
+          --brand-ink: #102a43;
+          --brand-muted: #486581;
+          --brand-surface: #f8fafc;
+          --brand-card: rgba(255, 255, 255, 0.88);
+          --brand-line: rgba(15, 118, 110, 0.18);
+        }
+
+        * {
+          box-sizing: border-box;
+        }
+
+        body {
+          margin: 0;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background:
+            radial-gradient(circle at 10% 10%, rgba(29, 78, 216, 0.14), transparent 36%),
+            radial-gradient(circle at 90% 85%, rgba(15, 118, 110, 0.18), transparent 32%),
+            linear-gradient(145deg, #f0f9ff 0%, #eff6ff 40%, #f8fafc 100%);
+          min-height: 100vh;
+          color: var(--brand-ink);
+        }
+
+        .welcome-shell {
+          min-height: 100vh;
+          display: grid;
+          place-items: center;
+          padding: 24px;
+          animation: fadeIn 900ms ease-out;
+        }
+
+        .welcome-card {
+          width: min(920px, 100%);
+          background: var(--brand-card);
+          border: 1px solid var(--brand-line);
+          border-radius: 22px;
+          padding: 34px 24px;
+          box-shadow: 0 24px 50px rgba(16, 42, 67, 0.13);
+          backdrop-filter: blur(4px);
+        }
+
+        .badge {
+          display: inline-block;
+          margin: 0 0 14px;
+          padding: 8px 14px;
+          border-radius: 999px;
+          font-size: 12px;
+          letter-spacing: 0.12em;
+          font-weight: 800;
+          color: #075985;
+          background: #e0f2fe;
+        }
+
+        .arabic {
+          margin: 0;
+          font-size: 26px;
+          color: var(--brand-primary);
+          font-weight: 700;
+          line-height: 1.4;
+          direction: rtl;
+        }
+
+        h1 {
+          margin: 14px 0 8px;
+          font-size: clamp(30px, 5vw, 50px);
+          line-height: 1.14;
+          color: #0b3a53;
+          animation: riseUp 800ms ease-out;
+        }
+
+        .sub {
+          margin: 0;
+          font-size: 19px;
+          color: #243b53;
+        }
+
+        .time {
+          margin: 10px 0 0;
+          color: var(--brand-muted);
+          font-size: 15px;
+        }
+
+        .grid {
+          margin-top: 26px;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 14px;
+        }
+
+        article {
+          background: var(--brand-surface);
+          border: 1px solid #dbeafe;
+          border-radius: 14px;
+          padding: 14px;
+          transform: translateY(0);
+          transition: transform 200ms ease, box-shadow 200ms ease;
+        }
+
+        article:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 12px 18px rgba(15, 118, 110, 0.15);
+        }
+
+        h3 {
+          margin: 0 0 6px;
+          font-size: 18px;
+          color: #0f172a;
+        }
+
+        article p {
+          margin: 0;
+          font-size: 14px;
+          color: #334e68;
+          line-height: 1.5;
+        }
+
+        .foot {
+          margin: 22px 0 0;
+          padding-top: 14px;
+          border-top: 1px dashed #bfdbfe;
+          color: #1e3a8a;
+          font-size: 15px;
+          font-weight: 600;
+        }
+
         @keyframes fadeIn {
           from {
             opacity: 0;
@@ -53,24 +176,30 @@ export const welcome = () => {
             opacity: 1;
           }
         }
-  
-        @keyframes scaleUp {
+
+        @keyframes riseUp {
           from {
-            transform: scale(0.8);
+            opacity: 0;
+            transform: translateY(14px);
           }
           to {
-            transform: scale(1);
+            opacity: 1;
+            transform: translateY(0);
           }
         }
-  
-        @keyframes slideIn {
-          from {
-            transform: translateX(-50px);
-            opacity: 0;
+
+        @media (max-width: 640px) {
+          .welcome-card {
+            padding: 24px 16px;
+            border-radius: 16px;
           }
-          to {
-            transform: translateX(0);
-            opacity: 1;
+
+          .arabic {
+            font-size: 22px;
+          }
+
+          .sub {
+            font-size: 17px;
           }
         }
       </style>
