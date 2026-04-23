@@ -16,8 +16,8 @@ export const welcome = () => {
       <div class="welcome-shell">
         <div class="welcome-card">
           <p class="badge">ADILUSMAN QURAN BACKEND</p>
-          <p class="arabic center">السلام عليكم ورحمة الله وبركاته</p>
-          <h1>Alhamdu lillah. API is ready for service.</h1>
+          <p class="arabic text-center">السلام عليكم ورحمة الله وبركاته</p>
+          <h1>Alhamdulillah. API is ready for service.</h1>
           <p class="sub">${greeting}</p>
           <p class="time">Server time: <strong>${date}</strong></p>
 
@@ -103,6 +103,7 @@ export const welcome = () => {
           font-weight: 700;
           line-height: 1.4;
           direction: rtl;
+          text-align: center;
         }
 
         h1 {
