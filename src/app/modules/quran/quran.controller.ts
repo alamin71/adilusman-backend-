@@ -78,7 +78,9 @@ const getPublicSuras = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSingleSura = catchAsync(async (req: Request, res: Response) => {
-  const suraId = req.params.suraId;
+  const suraId = Array.isArray(req.params.suraId)
+    ? req.params.suraId[0]
+    : req.params.suraId;
   const result = await QuranService.getSingleSuraFromDB(suraId);
 
   sendResponse(res, {
@@ -90,7 +92,9 @@ const getSingleSura = catchAsync(async (req: Request, res: Response) => {
 });
 
 const listenSura = catchAsync(async (req: Request, res: Response) => {
-  const suraId = req.params.suraId;
+  const suraId = Array.isArray(req.params.suraId)
+    ? req.params.suraId[0]
+    : req.params.suraId;
   const result = await QuranService.increaseListenCountInDB(suraId);
 
   sendResponse(res, {
@@ -102,7 +106,9 @@ const listenSura = catchAsync(async (req: Request, res: Response) => {
 });
 
 const downloadSura = catchAsync(async (req: Request, res: Response) => {
-  const suraId = req.params.suraId;
+  const suraId = Array.isArray(req.params.suraId)
+    ? req.params.suraId[0]
+    : req.params.suraId;
   const result = await QuranService.increaseDownloadCountInDB(suraId);
 
   sendResponse(res, {
@@ -115,7 +121,9 @@ const downloadSura = catchAsync(async (req: Request, res: Response) => {
 
 const downloadSuraAudioFile = catchAsync(
   async (req: Request, res: Response) => {
-    const suraId = req.params.suraId;
+    const suraId = Array.isArray(req.params.suraId)
+      ? req.params.suraId[0]
+      : req.params.suraId;
     const sura = await QuranService.getSuraDownloadInfoFromDB(suraId);
 
     if (!sura?.audioUrl) {
@@ -171,7 +179,9 @@ const addFavorite = catchAsync(async (req: Request, res: Response) => {
 });
 
 const removeFavorite = catchAsync(async (req: Request, res: Response) => {
-  const suraId = req.params.suraId;
+  const suraId = Array.isArray(req.params.suraId)
+    ? req.params.suraId[0]
+    : req.params.suraId;
   const guestId = getGuestId(req);
 
   if (!guestId) {
