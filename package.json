@@ -11,7 +11,12 @@
     "format": "prettier . --write",
     "seed": "ts-node src/seed/seedAdmin.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "pm2:start": "pm2 start dist/server.js --name adilusman-backend",
+    "pm2:restart": "pm2 restart adilusman-backend",
+    "pm2:stop": "pm2 stop adilusman-backend",
+    "pm2:delete": "pm2 delete adilusman-backend",
+    "pm2:logs": "pm2 logs adilusman-backend"
   },
   "keywords": [
     "nodejs",
